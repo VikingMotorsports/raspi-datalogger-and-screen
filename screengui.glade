@@ -311,7 +311,7 @@
                           </object>
                         </child>
                         <child type="label">
-                          <object class="GtkLabel" id="deployLABEL">
+                          <object class="GtkLabel" id="deployLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">DEPLOY</property>
@@ -367,7 +367,7 @@
                         <property name="label-xalign">0</property>
                         <property name="shadow-type">none</property>
                         <child>
-                          <object class="GtkLabel" id="mphDisplay6">
+                          <object class="GtkLabel" id="tractionDisplay">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">3</property>
@@ -377,7 +377,7 @@
                           </object>
                         </child>
                         <child type="label">
-                          <object class="GtkLabel" id="tractionLABEL">
+                          <object class="GtkLabel" id="tractionLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">TRACTION</property>
