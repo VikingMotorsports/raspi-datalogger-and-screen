@@ -14,7 +14,7 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLevelBar">
+          <object class="GtkLevelBar" id="levelBar1">
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
