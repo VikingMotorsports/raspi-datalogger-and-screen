@@ -2,11 +2,16 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <!-- interface-css-provider-path screen.css -->
   <object class="GtkWindow" id="window1">
     <property name="width-request">800</property>
     <property name="height-request">480</property>
     <property name="can-focus">False</property>
-    <property name="double-buffered">False</property>
+    <property name="resizable">False</property>
+    <property name="hide-titlebar-when-maximized">True</property>
+    <property name="icon-name">utilities-system-monitor</property>
+    <property name="decorated">False</property>
+    <property name="gravity">center</property>
     <signal name="destroy" handler="onDestroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="vbox1">
@@ -18,11 +23,15 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="margin-left">10</property>
+            <property name="margin-right">10</property>
             <property name="margin-start">10</property>
             <property name="margin-end">10</property>
-            <property name="margin-top">10</property>
             <property name="margin-bottom">10</property>
-            <property name="value">0.6899999997764826</property>
+            <property name="value">0.6899999999999999</property>
+            <style>
+              <class name="level-bar"/>
+            </style>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -37,9 +46,11 @@
             <property name="can-focus">False</property>
             <child>
               <object class="GtkBox" id="lvbox1">
+                <property name="width-request">160</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="double-buffered">False</property>
+                <property name="margin-left">10</property>
+                <property name="margin-right">10</property>
                 <property name="margin-start">10</property>
                 <property name="margin-end">10</property>
                 <property name="margin-top">10</property>
@@ -53,29 +64,33 @@
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
                     <child>
-                      <object class="GtkLabel" id="voltageDisplay">
+                      <object class="GtkLabel" id="coolantTempDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">250</property>
+                        <property name="label" translatable="yes">34 C</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
                       </object>
                     </child>
                     <child type="label">
-                      <object class="GtkLabel" id="voltageLabel">
+                      <object class="GtkLabel" id="coolantTempLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">VOLTAGE</property>
+                        <property name="label" translatable="yes">COOLANT TEMP</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
                         </attributes>
                       </object>
                     </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -105,10 +120,14 @@
                         </attributes>
                       </object>
                     </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -138,10 +157,14 @@
                         </attributes>
                       </object>
                     </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -156,6 +179,8 @@
               <object class="GtkBox" id="cvbox1">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox" id="cvbox2">
@@ -163,10 +188,6 @@
                     <property name="can-focus">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="double-buffered">False</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkLabel" id="speedLabel">
@@ -215,10 +236,14 @@
                         <property name="position">2</property>
                       </packing>
                     </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -227,10 +252,6 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="double-buffered">False</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">10</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkLabel" id="lapLabel">
@@ -264,10 +285,14 @@
                         <property name="position">1</property>
                       </packing>
                     </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -279,135 +304,68 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="rhbox1">
+              <object class="GtkBox" id="rvbox1">
+                <property name="width-request">160</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="double-buffered">False</property>
+                <property name="margin-left">10</property>
+                <property name="margin-right">10</property>
                 <property name="margin-start">10</property>
                 <property name="margin-end">10</property>
                 <property name="margin-top">10</property>
                 <property name="margin-bottom">10</property>
-                <property name="homogeneous">True</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox" id="rvbox1">
+                  <object class="GtkLabel" id="rat">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label-xalign">0</property>
-                        <property name="shadow-type">none</property>
-                        <child>
-                          <object class="GtkLabel" id="deployDisplay">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">3</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
-                            </attributes>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="deployLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">DEPLOY</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
-                            </attributes>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label-xalign">0</property>
-                        <property name="shadow-type">none</property>
-                        <child>
-                          <object class="GtkLabel" id="regenDisplay">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">2</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
-                            </attributes>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="regenLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">REGEN</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
-                            </attributes>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkFrame">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label-xalign">0</property>
-                        <property name="shadow-type">none</property>
-                        <child>
-                          <object class="GtkLabel" id="tractionDisplay">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">3</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
-                            </attributes>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="tractionLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">TRACTION</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
-                            </attributes>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
+                    <property name="label" translatable="yes">&lt;',=,~~</property>
+                    <style>
+                      <class name="rat"/>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea">
+                  <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">none</property>
+                    <child>
+                      <object class="GtkLabel" id="splitDisplay">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">0:00.000</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                        </attributes>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="splitLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">SPLIT</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
+                        </attributes>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
+                    <property name="padding">5</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -427,5 +385,8 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="background"/>
+    </style>
   </object>
 </interface>

@@ -10,24 +10,29 @@ class Handler:
         Gtk.main_quit()
 
 def app_main():
+	#Get builder
 	builder = Gtk.Builder()
 	builder.add_from_file("screengui.glade")
 	builder.connect_signals(Handler())
 
+	#Get styling
+	screen = Gtk.Screen()
+	cssProvider = Gtk.CssProvider()
+	cssProvider.load_from_path("screen.css")
+
+	#Get objects in window
 	window = builder.get_object("window1")
 	battery = builder.get_object("levelBar1")
 
-	voltage = builder.get_object("voltageDisplay")
+	coolTemp = builder.get_object("coolantTempDisplay")
 	batTemp = builder.get_object("batTempDisplay")
 	motorTemp = builder.get_object("motorTempDisplay")
 	mph = builder.get_object("mphDisplay")
-	deploy = builder.get_object("deployDisplay")
-	regen = builder.get_object("regenDisplay")
-	traction = builder.get_object("tractionDisplay")
 
 	lap = builder.get_object("lapDisplay")
 
 	last_lap = time.perf_counter()
+	cssFile = open("screen.css", "r")
 	minutes = 0; 
 
 	def update_bar(i): 
@@ -35,12 +40,9 @@ def app_main():
 
 	def update_displays(i): 
 		mph.set_text(str(i)) 
-		voltage.set_text(str(i)) 
+		coolTemp.set_text(str(i)) 
 		batTemp.set_text(str(i)) 
 		motorTemp.set_text(str(i)) 
-		deploy.set_text(str(i)) 
-		regen.set_text(str(i)) 
-		traction.set_text(str(i)) 
 
 	def format_seconds(f, n):
 		return int((f%60)*pow(10, n))/pow(10,n)
@@ -75,8 +77,10 @@ def app_main():
 				GLib.idle_add(update_bar, current)
 				GLib.idle_add(update_displays, displays)
 				time.sleep(0.1);	
-			
+	
+	window.add_provider(cssProvider, 0);
 	window.show_all()
+	window.fullscreen()
 
 	wiggle_thread = threading.Thread(target=wiggle)	
 	wiggle_thread.daemon = True

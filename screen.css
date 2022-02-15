@@ -1,0 +1,27 @@
+label 
+{
+	color: #303030;
+}
+
+.rat 
+{
+	color:green;
+	font-weight:bold;
+}
+
+.background 
+{
+	background:DimGrey;
+}
+
+.text-container
+{
+	background:white;
+	border: 5px solid DarkGrey;
+}
+
+.level-bar
+{
+	border: 5px solid DarkGrey;
+	color: yellow;
+}
