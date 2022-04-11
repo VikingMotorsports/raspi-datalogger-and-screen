@@ -8,9 +8,7 @@
     <property name="height-request">480</property>
     <property name="can-focus">False</property>
     <property name="resizable">False</property>
-    <property name="hide-titlebar-when-maximized">True</property>
     <property name="icon-name">utilities-system-monitor</property>
-    <property name="decorated">False</property>
     <property name="gravity">center</property>
     <signal name="destroy" handler="onDestroy" swapped="no"/>
     <child>
@@ -29,9 +27,6 @@
             <property name="margin-end">10</property>
             <property name="margin-bottom">10</property>
             <property name="value">0.6899999999999999</property>
-            <style>
-              <class name="level-bar"/>
-            </style>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -58,7 +53,7 @@
                 <property name="orientation">vertical</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="coolTempFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
@@ -95,7 +90,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="batTempFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
@@ -132,7 +127,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="motorTempFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
