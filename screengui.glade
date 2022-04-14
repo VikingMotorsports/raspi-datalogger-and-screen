@@ -27,11 +27,32 @@
             <property name="margin-end">10</property>
             <property name="margin-bottom">10</property>
             <property name="value">0.6899999999999999</property>
+	    <!--            <style> 
+              <class name=".text-container"/>
+	    </style> -->
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="pack-type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="rat">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">&lt;',=,~~</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+            <style>
+              <class name="rat"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -48,7 +69,6 @@
                 <property name="margin-right">10</property>
                 <property name="margin-start">10</property>
                 <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
                 <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <property name="homogeneous">True</property>
@@ -174,7 +194,6 @@
               <object class="GtkBox" id="cvbox1">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="margin-top">10</property>
                 <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -307,16 +326,36 @@
                 <property name="margin-right">10</property>
                 <property name="margin-start">10</property>
                 <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
                 <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel" id="rat">
+                  <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">&lt;',=,~~</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">none</property>
+                    <child>
+                      <object class="GtkTreeView" id="prevSplitTree">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="enable-search">False</property>
+                        <property name="enable-grid-lines">horizontal</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="prevSplitLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">PREVIOUS SPLITS</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
+                        </attributes>
+                      </object>
+                    </child>
                     <style>
-                      <class name="rat"/>
                       <class name="text-container"/>
                     </style>
                   </object>

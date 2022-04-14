@@ -1,8 +1,8 @@
 import threading
 import time
 import gi
-import temptest
-import acceltest
+#import temptest
+#import acceltest
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, GObject, Gdk
@@ -147,9 +147,9 @@ def app_main():
 	window.show_all()
 	window.fullscreen()
 
-	sensor_thread = threading.Thread(target=update_loop)	
-	sensor_thread.daemon = True
-	sensor_thread.start()
+#	sensor_thread = threading.Thread(target=update_loop)	
+#	sensor_thread.daemon = True
+#	sensor_thread.start()
 
 #	wiggle_thread = threading.Thread(target=wiggle)	
 #	wiggle_thread.daemon = True
