@@ -1,6 +1,6 @@
 import multiprocessing
-import Boot
-import DataHandler
+import boot
+import dataHandler
 
 if __name__ == "__main__":
     boot = multiprocessing.Process(target=Boot.wait, args=())
