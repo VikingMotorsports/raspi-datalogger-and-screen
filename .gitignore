@@ -1,2 +1,4 @@
 screengui.glade~
 *.swp
+__pycache__
+*.pyc
