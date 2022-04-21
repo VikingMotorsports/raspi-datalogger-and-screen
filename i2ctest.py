@@ -9,10 +9,9 @@ def i2c(id, tick):
     status, count, data = pi.bsc_i2c(I2C_ADDR)
 
     if count:
-        print( "sent={}, FR={}, recieved= {} [{}]".format(status>>16, status&0xfff, count, data))
+        print("recieved: {}".format(data))
             
-        status, count, data = pi.bsc_i2c(I2C_ADDR, 
-                "sent={}, FR={}, recieved= {} [{}]".format(status>>16, status&0xfff, count, data))
+        status, count, data = pi.bsc_i2c(I2C_ADDR, data)
 
 pi = pigpio.pi()
 
