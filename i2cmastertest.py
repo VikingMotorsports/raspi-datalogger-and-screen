@@ -1,11 +1,19 @@
 from smbus2 import SMBus, i2c_msg
+import time
 
 with SMBus(1) as bus:
-    # Read 64 bytes from address 0x69
-    msg = i2c_msg.read(0x69, 2)
-    bus.i2c_rdwr(msg)
-
+    while 1:
     # Write a single byte to address 0x69
-    msg = i2c_msg.write(0x69, "Poggers")
-    bus.i2c_rdwr(msg)
+        toSend = input("Enter Message: ")
+        msg = i2c_msg.write(0x69, toSend)
+        bus.i2c_rdwr(msg)
+ 
+        msg = i2c_msg.read(0x69, 18 + len(toSend))
+        bus.i2c_rdwr(msg)
+        data = list(msg)
+        res = ""
+        for i in data:
+            res += chr(i)
+        res += '\n'
 
+        print(res)
