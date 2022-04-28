@@ -1,6 +1,6 @@
 from smbus2 import SMBus, i2c_msg
 
-slaveAddress = 0x9
+slaveAddress = 0x69
 with SMBus(1) as bus:
     while 1:
         toSend = input("Enter Message: ")

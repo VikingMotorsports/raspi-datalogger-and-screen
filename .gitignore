@@ -1,4 +1,8 @@
-screengui.glade~
-*.swp
-__pycache__
-*.pyc
+*
+.bash_history
+.viminfo
+!*.py
+!*.css
+!*.glade
+!.gitignore
+!.gitconfig

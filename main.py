@@ -1,12 +1,16 @@
-import multiprocessing
+#!/usr/bin/env python3
 import boot
 import dataHandler
 
-if __name__ == "__main__":
-    boot = multiprocessing.Process(target=boot.wait)
-    dataHandler = multiprocessing.Process(target=dataHandler.run)
+#<',=,~~
+#   rat to eat bugs
 
-    boot.start()
+if __name__ == "__main__":
+    boot = Process(target=boot.wait)
+    dataHandler = Process(target=dataHandler.run)
+
+    boot.start() #Run boot process and wait for it to finish
     boot.join()
-    dataHandler.start()
+
+    dataHandler.start() #Run data handler process and wait for it to finish
     dataHandler.join()
