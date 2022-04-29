@@ -107,8 +107,8 @@ def init():
 
 def start_screen(connection):
     #create and start the update daemon
-    updateDaemon = Thread(target=update_thread, args=(connection,), daemon=True)
-    updateDaemon.start()
+#    updateDaemon = Thread(target=update_thread, args=(connection,), daemon=True)
+#updateDaemon.start()
 
     #start the screen
     init()
