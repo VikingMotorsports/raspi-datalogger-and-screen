@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from multiprocessing import Process
 import boot
 import dataHandler
 
@@ -6,6 +7,7 @@ import dataHandler
 #   rat to eat bugs
 
 if __name__ == "__main__":
+    print("YO");
     boot = Process(target=boot.wait)
     dataHandler = Process(target=dataHandler.run)
 

@@ -1,4 +1,6 @@
 import gi
+from multiprocessing import Pipe
+from threading import Thread
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, GObject, Gdk
@@ -44,9 +46,10 @@ ratContext = rat.get_style_context()
 
 lapDisplay = builder.get_object("lapDisplay")
 
+#open the styleing file
 cssFile = open("screen.css", "r")
 
-#Update values
+#Update color of rat using its style context
 def update_rat(styleContext, value):
     if value < 40:
         styleContext.remove_class("red")
@@ -61,6 +64,7 @@ def update_rat(styleContext, value):
         styleContext.remove_class("lime")
         styleContext.add_class("red")
 
+#updates the background color of the object associated with the given style context
 def update_background_color(styleContext, value):
     if value < 33:
         styleContext.remove_class("back-red")
@@ -75,24 +79,38 @@ def update_background_color(styleContext, value):
         styleContext.remove_class("back-green")
         styleContext.add_class("back-red")
 
-def update(mph, soc, coolTemp, batTemp, motTemp):
-    mphDisplay.set_text(str(mph))
-    coolTempDisplay.set_text(str(coolTemp))
-    batTempDisplay.set_text(str(batTemp))
-    motorTempDisplay.set_text(str(motTemp))
-    lapDisplay.set_text("TIME");
-    battery.set_value(soc/100)
-    update_background_color(cfStyleContext, coolTemp)
-    update_background_color(bfStyleContext, batTemp)
-    update_background_color(mfStyleContext, motTemp)
-    update_rat(ratContext, mph)
+#provide updated values to the display by reading from a pipe
+def update_thread(connection):
+
+    while(1):
+        #get data from the pipe
+        mph, soc, coolTemp, batTemp, motTemp = connection.recv()
+
+        #update diplays
+        mphDisplay.set_text(str(mph))
+        coolTempDisplay.set_text(str(coolTemp))
+        batTempDisplay.set_text(str(batTemp))
+        motorTempDisplay.set_text(str(motTemp))
+        lapDisplay.set_text("TIME")
+        battery.set_value(soc/100)
+
+        #change colors accordingly
+        update_background_color(cfStyleContext, coolTemp)
+        update_background_color(bfStyleContext, batTemp)
+        update_background_color(mfStyleContext, motTemp)
+        update_rat(ratContext, mph)
 
 def init():
     #Run the screen
     window.show_all()
     window.fullscreen()
 
-def start_screen():
+def start_screen(connection):
+    #create and start the update daemon
+    updateDaemon = Thread(target=update_thread, args=(connection,), daemon=True)
+    updateDaemon.start()
+
+    #start the screen
     init()
     Gtk.main()
 
