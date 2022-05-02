@@ -148,27 +148,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
-                    <property name="shadow-type">none</property>
-                    <child>
-                      <object class="GtkLabel" id="motorTempDisplay">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">32 C</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
-                        </attributes>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="motorTempLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">MOTOR TEMP</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
-                        </attributes>
-                      </object>
-                    </child>
+                    <property name="shadow-type">none</property> 
                     <style>
                       <class name="text-container"/>
                     </style>

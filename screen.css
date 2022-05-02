@@ -21,12 +21,6 @@ label
 	border: 5px solid DarkGrey;
 }
 
-.level-bar
-{
-	border: 5px solid DarkGrey;
-	color: yellow;
-}
-
 .red {color: red;}
 .yellow {color: yellow;}
 .lime {color: lime;}
@@ -35,5 +29,7 @@ label
 .back-yellow {background: yellow;}
 .back-green {background: lime;}
 
-
+.low-offset {background-color: red;}
+.med-offset {background-color: yellow;}
+.high-offset {background-color: lime;}
 
