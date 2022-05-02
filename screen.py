@@ -16,12 +16,12 @@ class Handler:
 
 #Get builder
 builder = Gtk.Builder()
-builder.add_from_file("screengui.glade")
+builder.add_from_file("/home/vms/raspi-datalogger-and-screen/screengui.glade")
 builder.connect_signals(Handler())
 
 #Get styling
 cssProvider = Gtk.CssProvider() 
-cssProvider.load_from_path("screen.css") 
+cssProvider.load_from_path("/home/vms/raspi-datalogger-and-screen/screen.css") 
 context = Gtk.StyleContext()
 screen = Gdk.Screen.get_default()
 context.add_provider_for_screen(screen,cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -31,6 +31,7 @@ window = builder.get_object("window1")
 
 bat_level = builder.get_object("levelBar1")
 
+#Add color offsets to state of charge level bar
 Gtk.LevelBar.add_offset_value(bat_level, Gtk.LEVEL_BAR_OFFSET_LOW, 0)
 Gtk.LevelBar.add_offset_value(bat_level, Gtk.LEVEL_BAR_OFFSET_HIGH, 0)
 Gtk.LevelBar.add_offset_value(bat_level, Gtk.LEVEL_BAR_OFFSET_FULL, 0)
@@ -52,9 +53,6 @@ bfStyleContext = batFrame.get_style_context()
 ratContext = rat.get_style_context()
 
 lapDisplay = builder.get_object("lapDisplay")
-
-#open the styleing file
-cssFile = open("screen.css", "r")
 
 #Update color of text using its style context
 def update_text_color(styleContext, value):
