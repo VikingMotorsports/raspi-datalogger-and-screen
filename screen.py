@@ -28,7 +28,6 @@ context.add_provider_for_screen(screen,cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_
 
 #Get objects in window
 window = builder.get_object("window1")
-
 bat_level = builder.get_object("levelBar1")
 
 #Add color offsets to state of charge level bar
@@ -97,13 +96,13 @@ def color_rat(value):
 def update_thread(connection):
     while True:
         #get data from the pipe
-        mph, soc, coolTemp, batTemp = connection.recv() 
+        mph, soc, coolTemp, batTemp, lapTime, newLap = connection.recv() 
 
         #update labels
         GLib.idle_add(mphDisplay.set_text, str(mph))
         GLib.idle_add(coolTempDisplay.set_text, str(coolTemp))
         GLib.idle_add(batTempDisplay.set_text, str(batTemp))
-        GLib.idle_add(lapDisplay.set_text, "TIME")
+        GLib.idle_add(lapDisplay.set_text, lapTime)
         GLib.idle_add(bat_level.set_value, soc/100)
 
         #change colors accordingly 
