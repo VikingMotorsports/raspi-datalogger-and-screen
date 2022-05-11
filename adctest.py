@@ -7,7 +7,6 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
 #create Rpi = busio.SPI(clock-board.SCK, MISO=b
-
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 
 cs1 = digitalio.DigitalInOut(board.D16)
@@ -15,7 +14,6 @@ mcp1 = MCP.MCP3008(spi, cs1)
 
 cs2 = digitalio.DigitalInOut(board.D20)
 mcp2 = MCP.MCP3008(spi, cs2)
-
 
 cs3 = digitalio.DigitalInOut(board.D21)
 mcp3 = MCP.MCP3008(spi, cs3)
@@ -47,9 +45,18 @@ pot36 = AnalogIn(mcp3, MCP.P5)
 pot37 = AnalogIn(mcp3, MCP.P6)
 pot38 = AnalogIn(mcp3, MCP.P7)
 
-while True:
+def printData():
+    print("\nADCs")
     print(str(pot11.voltage) + "\t" + str(pot12.voltage) + "\t" + str(pot13.voltage) + "\t" + str(pot14.voltage) + "\t" + str(pot15.voltage) + "\t" + str(pot16.voltage) + "\t" + str(pot17.voltage) + "\t" + str(pot18.voltage))
     print(str(pot21.voltage) + "\t" + str(pot22.voltage) + "\t" + str(pot23.voltage) + "\t" + str(pot24.voltage) + "\t" + str(pot25.voltage) + "\t" + str(pot26.voltage) + "\t" + str(pot27.voltage) + "\t" + str(pot28.voltage))
-    print(str(pot31.value) + "\t" + str(pot32.value) + "\t" + str(pot33.value) + "\t" + str(pot34.value) + "\t" + str(pot35.value) + "\t" + str(pot36.value) + "\t" + str(pot37.value) + "\t" + str(pot38.value))
+    print(str(pot31.voltage) + "\t" + str(pot32.voltage) + "\t" + str(pot33.voltage) + "\t" + str(pot34.voltage) + "\t" + str(pot35.voltage) + "\t" + str(pot36.voltage) + "\t" + str(pot37.voltage) + "\t" + str(pot38.voltage))
     print()
-    time.sleep(0.5)
+
+
+if __name__ == "__main__":
+    try:
+        while True:
+            printData()
+            time.sleep(0.5)
+    except KeyboardInterrupt: #ctrl-c
+        exit()
