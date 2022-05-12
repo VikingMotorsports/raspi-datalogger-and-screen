@@ -148,7 +148,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
-                    <property name="shadow-type">none</property> 
+                    <property name="shadow-type">none</property>
                     <style>
                       <class name="text-container"/>
                     </style>
@@ -313,13 +313,99 @@
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
                     <child>
-                      <object class="GtkTreeView" id="prevSplitTree">
+                      <object class="GtkBox" id="rvbox2">
                         <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="enable-search">False</property>
-                        <property name="enable-grid-lines">horizontal</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
+                        <property name="can-focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel" id="split1">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="split2">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="split3">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="split4">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="split5">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="split6">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">0:00.000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
                         </child>
                       </object>
                     </child>
