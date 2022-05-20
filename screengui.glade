@@ -318,10 +318,10 @@
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkLabel" id="split1">
+                          <object class="GtkLabel" id="split6">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -333,10 +333,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="split2">
+                          <object class="GtkLabel" id="split5">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -348,10 +348,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="split3">
+                          <object class="GtkLabel" id="split4">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -363,10 +363,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="split4">
+                          <object class="GtkLabel" id="split3">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -378,10 +378,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="split5">
+                          <object class="GtkLabel" id="split2">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -393,10 +393,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="split6">
+                          <object class="GtkLabel" id="split1">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">0:00.000</property>
+                            <property name="label" translatable="yes">00:00.000</property>
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
@@ -440,7 +440,7 @@
                       <object class="GtkLabel" id="splitDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">0:00.000</property>
+                        <property name="label" translatable="yes">00:00.000</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                         </attributes>

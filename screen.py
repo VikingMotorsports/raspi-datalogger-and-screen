@@ -52,6 +52,16 @@ bfStyleContext = batFrame.get_style_context()
 ratContext = rat.get_style_context()
 
 lapDisplay = builder.get_object("lapDisplay")
+splitDisplay = builder.get_object("splitDisplay")
+
+split1 = builder.get_object("split1")
+split2 = builder.get_object("split2")
+split3 = builder.get_object("split3")
+split4 = builder.get_object("split4")
+split5 = builder.get_object("split5")
+split6 = builder.get_object("split6")
+
+splitAmount = 0;
 
 #Update color of text using its style context
 def update_text_color(styleContext, value):
@@ -90,10 +100,13 @@ def color_battery(temp):
     update_background_color(bfStyleContext, temp)
 
 def color_rat(value):
+    if(
     update_text_color(ratContext, value)
 
+def update_split_color():
+
 #provide updated values to the display by reading from a pipe
-def update_thread(connection):
+def update_thread(connection): 
     while True:
         #get data from the pipe
         mph, soc, coolTemp, batTemp, lapTime, newLap = connection.recv() 
@@ -104,6 +117,14 @@ def update_thread(connection):
         GLib.idle_add(batTempDisplay.set_text, str(batTemp))
         GLib.idle_add(lapDisplay.set_text, lapTime)
         GLib.idle_add(bat_level.set_value, soc/100)
+        if True == newLap:
+            GLib.idle_add(split6.set_text, split5.get_text())
+            GLib.idle_add(split5.set_text, split4.get_text())
+            GLib.idle_add(split4.set_text, split3.get_text())
+            GLib.idle_add(split3.set_text, split2.get_text())
+            GLib.idle_add(split2.set_text, split1.get_text())
+            GLib.idle_add(split1.set_text, splitDisplay.get_text())
+            GLib.idle_add(splitDisplay.set_text, lapTime)
 
         #change colors accordingly 
         GLib.idle_add(color_cool, coolTemp)
