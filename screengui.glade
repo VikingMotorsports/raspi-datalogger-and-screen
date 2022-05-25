@@ -70,26 +70,26 @@
                 <property name="orientation">vertical</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <object class="GtkFrame" id="coolTempFrame">
+                  <object class="GtkFrame" id="latGFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
-                    <property name="shadow-type">none</property>
+                    <property name="shadow-type">none</property>	
                     <child>
-                      <object class="GtkLabel" id="coolantTempDisplay">
+                      <object class="GtkLabel" id="latGDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">34 C</property>
+                        <property name="label" translatable="yes">9.8 MS2</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
                       </object>
-                    </child>
+                    </child> 
                     <child type="label">
-                      <object class="GtkLabel" id="coolantTempLabel">
+                      <object class="GtkLabel" id="LatGLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">COOLANT TEMP</property>
+                        <property name="label" translatable="yes">LATERAL G</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
                         </attributes>
@@ -116,7 +116,7 @@
                       <object class="GtkLabel" id="batTempDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">40 C</property>
+                        <property name="label" translatable="yes">OK</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
@@ -144,7 +144,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame" id="motorTempFrame">
+                  <object class="GtkFrame" id="tcFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>

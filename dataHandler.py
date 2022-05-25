@@ -83,11 +83,11 @@ def update_lap():
     lapTime = format_time(now-prevTime);
 
     if 0 > split:
-        splitFormatted = split;
+        splitFormatted = str(split);
     elif 0 < split:
-        splitFormatted = split;
+        splitFormatted = str(split);
     else:
-        splitFormatted = split;
+        splitFormatted = str(split);
 
 
 

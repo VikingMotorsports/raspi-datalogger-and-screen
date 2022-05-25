@@ -38,16 +38,16 @@ Gtk.LevelBar.add_offset_value(bat_level, "low-offset", 0.33)
 Gtk.LevelBar.add_offset_value(bat_level, "med-offset", 0.66)
 Gtk.LevelBar.add_offset_value(bat_level, "high-offset", 1.0)
 
-coolTempDisplay = builder.get_object("coolantTempDisplay")
+latGDisplay = builder.get_object("latGDisplay")
 batTempDisplay = builder.get_object("batTempDisplay")
 mphDisplay = builder.get_object("mphDisplay")
 
-coolFrame = builder.get_object("coolTempFrame")
+latGFrame = builder.get_object("latGFrame")
 batFrame = builder.get_object("batTempFrame")
 
 rat = builder.get_object("rat")
 
-cfStyleContext = coolFrame.get_style_context()
+tcStyleContext = tcFrame.get_style_context()
 bfStyleContext = batFrame.get_style_context()
 ratContext = rat.get_style_context()
 
@@ -149,7 +149,7 @@ def color_rat(value):
 def update_thread(connection): 
     while 1:
         #get data from the pipe
-        mph, soc, coolTemp, batTemp, lapTime, newSplit, newLap = connection.recv() 
+        mph, soc, coolTemp, batTemp, lapTime, newSplit, newLap, tcOn = connection.recv() 
 
         #update labels
         GLib.idle_add(mphDisplay.set_text, str(mph))
@@ -168,6 +168,8 @@ def update_thread(connection):
             #GLib.idle_add(color_splits)
             #if 6 > splitsUsed:
             #    splitsUsed += 1
+        if True == tcOn:
+            
 
         #change colors accordingly 
         GLib.idle_add(color_cool, coolTemp)
