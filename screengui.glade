@@ -266,7 +266,7 @@
                       <object class="GtkLabel" id="lapDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">0:00.000</property>
+                        <property name="label" translatable="yes">00:00.000</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
@@ -325,6 +325,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -340,6 +343,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -355,6 +361,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -370,6 +379,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -385,6 +397,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -400,6 +415,9 @@
                             <attributes>
                               <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                             </attributes>
+			  <style>
+			     <class name="white"/>
+			  </style>
                           </object>
                           <packing>
                             <property name="expand">False</property>

@@ -61,7 +61,15 @@ split4 = builder.get_object("split4")
 split5 = builder.get_object("split5")
 split6 = builder.get_object("split6")
 
-splitAmount = 0;
+sp0Context = splitDisplay.get_style_context()
+sp1Context = split1.get_style_context()
+sp2Context = split2.get_style_context()
+sp3Context = split3.get_style_context()
+sp4Context = split4.get_style_context()
+sp5Context = split5.get_style_context()
+sp6Context = split6.get_style_context()
+
+splitsUsed = 0;
 
 #Update color of text using its style context
 def update_text_color(styleContext, value):
@@ -93,6 +101,40 @@ def update_background_color(styleContext, value):
         styleContext.remove_class("back-green")
         styleContext.add_class("back-red")
 
+#changes the text color of a specific split based on style context, and given value
+def update_split_color(styleContext, split):
+    styleContext.remove_class("white")
+    if split[0] == '-':
+        styleContext.remove_class("black")
+        styleContext.remove_class("red")
+        styleContext.add_class("lime")
+    elif split[0] == '+':
+        styleContext.remove_class("black")
+        styleContext.remove_class("lime")
+        styleContext.add_class("red")
+    else:
+        styleContext.remove_class("red")
+        styleContext.remove_class("lime")
+        styleContext.add_class("black")
+
+#updates text colors of splits based on sign and status
+def color_splits():
+    if 0 <= splitsUsed:
+        update_split_color(sp0Context, splitDisplay)
+    if 1 <= splitsUsed:
+        update_split_color(sp1Context, split1)
+    if 2 <= splitsUsed:
+        update_split_color(sp2Context, split2)
+    if 3 <= splitsUsed:
+        update_split_color(sp3Context, split3)
+    if 4 <= splitsUsed:
+        update_split_color(sp4Context, split4)
+    if 5 <= splitsUsed:
+        update_split_color(sp5Context, split5)
+    if 6 <= splitsUsed:
+        update_split_color(sp6Context, split6)
+
+
 def color_cool(temp):
     update_background_color(cfStyleContext, temp)
 
@@ -100,16 +142,14 @@ def color_battery(temp):
     update_background_color(bfStyleContext, temp)
 
 def color_rat(value):
-    if(
     update_text_color(ratContext, value)
 
-def update_split_color():
 
 #provide updated values to the display by reading from a pipe
 def update_thread(connection): 
-    while True:
+    while 1:
         #get data from the pipe
-        mph, soc, coolTemp, batTemp, lapTime, newLap = connection.recv() 
+        mph, soc, coolTemp, batTemp, lapTime, newSplit, newLap = connection.recv() 
 
         #update labels
         GLib.idle_add(mphDisplay.set_text, str(mph))
@@ -124,7 +164,10 @@ def update_thread(connection):
             GLib.idle_add(split3.set_text, split2.get_text())
             GLib.idle_add(split2.set_text, split1.get_text())
             GLib.idle_add(split1.set_text, splitDisplay.get_text())
-            GLib.idle_add(splitDisplay.set_text, lapTime)
+            GLib.idle_add(splitDisplay.set_text, newSplit)
+            #GLib.idle_add(color_splits)
+            #if 6 > splitsUsed:
+            #    splitsUsed += 1
 
         #change colors accordingly 
         GLib.idle_add(color_cool, coolTemp)

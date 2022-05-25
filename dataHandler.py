@@ -17,7 +17,10 @@ batTemp = 3
 newLap = False
 now = time.time()
 prevTime = now
-lapTime = "00:00:000"
+lapTime = "00:00.000"
+split = 0;
+prevLap = 0;
+splitFormatted = "00:00.000"
 
 def run():
     run_screen()
@@ -42,14 +45,33 @@ def update_data():
             batTemp -= 1
 
             time.sleep(0.1)
+
+#Formats time for use in displaying
+def format_time(time):
+    #get base values
+    minutes = str(int((time)/60))
+    seconds = str(int(time)%60)
+    milliseconds = str(int(((time*1000))%1000))
+
+    #properly format values so they always take up the same amount of space
+    minutes = "0"*(2 - len(minutes)) + minutes 
+    seconds = "0"*(2 - len(seconds)) + seconds
+    milliseconds = "0"*(3 - len(milliseconds)) + milliseconds
+
+    #hook it all up
+    formatted = minutes + ":" + seconds + "." + milliseconds
+    return formatted
+
   
 #Update the lap time as needed
 def update_lap():
-    global now, newLap, lapTime, prevTime
+    global now, newLap, lapTime, prevTime, split, splitFormatted, prevLap
     now = time.time()
 
     if newLap: #Needs to be reworked to work with screen
-        lapTime = "00:00:000"
+        lapTime = "00:00.000"
+        split = now-prevTime - prevLap
+        prevLap = now-prevTime
         prevTime = now
         newLap = False
 
@@ -58,27 +80,25 @@ def update_lap():
     if 1 == random:
         newLap = True
 
-    #get base values
-    minutes = str(int((now-prevTime)/60))
-    seconds = str(int(now-prevTime)%60)
-    milliseconds = str(int(((now*1000) - (prevTime*1000))%1000))
+    lapTime = format_time(now-prevTime);
 
-    #properly format values so they always take up the same amount of space
-    minutes = "0"*(2 - len(minutes)) + minutes 
-    seconds = "0"*(2 - len(seconds)) + seconds
-    milliseconds = "0"*(3 - len(milliseconds)) + milliseconds
+    if 0 > split:
+        splitFormatted = split;
+    elif 0 < split:
+        splitFormatted = split;
+    else:
+        splitFormatted = split;
 
-    #hook it all up
-    lapTime = minutes + ":" + seconds + ":" + milliseconds
+
 
 #Pass the screen updated info
 def update_screen(connection):
-    global mph, bat, coolTemp, batTemp, lapTime, newLap
+    global mph, bat, coolTemp, batTemp, lapTime, splitFormatted, newLap
     now = time.time()
     prevTime = now
 
     while 1:
-            connection.send([mph, bat, coolTemp, batTemp, lapTime, newLap])
+            connection.send([mph, bat, coolTemp, batTemp, lapTime, splitFormatted, newLap])
             update_lap()
             time.sleep(0.1)
 
