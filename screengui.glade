@@ -59,7 +59,7 @@
             <property name="can-focus">False</property>
             <child>
               <object class="GtkBox" id="lvbox1">
-                <property name="width-request">160</property>
+                <property name="width-request">170</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-left">10</property>
@@ -79,7 +79,7 @@
                       <object class="GtkLabel" id="latGDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">9.8 MS2</property>
+                        <property name="label" translatable="yes">1</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
@@ -89,7 +89,7 @@
                       <object class="GtkLabel" id="LatGLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">LATERAL G</property>
+			<property name="label" translatable="yes">LATERAL G</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
                         </attributes>
@@ -149,6 +149,16 @@
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
+                    <child>
+                      <object class="GtkLabel" id="tcDisplay">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">TC</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
+                        </attributes>
+                      </object>
+                    </child>
                     <style>
                       <class name="text-container"/>
                     </style>
@@ -169,7 +179,7 @@
             </child>
             <child>
               <object class="GtkBox" id="cvbox1">
-                <property name="width-request">280</property>
+                <property name="width-request">260</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-bottom">10</property>
@@ -297,7 +307,7 @@
             </child>
             <child>
               <object class="GtkBox" id="rvbox1">
-                <property name="width-request">160</property>
+                <property name="width-request">170</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-left">10</property>
@@ -428,10 +438,10 @@
                       </object>
                     </child>
                     <child type="label">
-                      <object class="GtkLabel" id="prevSplitLabel">
+                      <object class="GtkLabel" id="prevLapsLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">PREVIOUS SPLITS</property>
+                        <property name="label" translatable="yes">PREVIOUS LAPS</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
                         </attributes>
@@ -458,7 +468,7 @@
                       <object class="GtkLabel" id="splitDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">00:00.000</property>
+                        <property name="label" translatable="yes">  00:00.000</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 24"/>
                         </attributes>
