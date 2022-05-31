@@ -53,12 +53,12 @@ def printData():
     print()
 
 def getData():
-    return [pot11.voltage, pot12.voltage, pot13.voltage, pot14.voltage, 
-            pot16.voltage, pot16.voltage, pot17.voltage, pot18.voltage,
-            pot21.voltage, pot22.voltage, pot23.voltage, pot24.voltage, 
-            pot25.voltage, pot26.voltage, pot27.voltage, pot28.voltage,
-            pot31.voltage, pot32.voltage, pot33.voltage, pot34.voltage, 
-            pot35.voltage, pot36.voltage, pot37.voltage, pot38.voltage]
+    return [pot11.value, pot12.value, pot13.value, pot14.value, 
+            pot16.value, pot16.value, pot17.value, pot18.value,
+            pot21.value, pot22.value, pot23.value, pot24.value, 
+            pot25.value, pot26.value, pot27.value, pot28.value,
+            pot31.value, pot32.value, pot33.value, pot34.value, 
+            pot35.value, pot36.value, pot37.value, pot38.value]
 
 if __name__ == "__main__":
     try:

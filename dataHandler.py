@@ -23,6 +23,10 @@ newLap = False
 now = time.time()
 prevTime = now
 
+socPot = 0
+socMax = 61504
+socMin = 512
+
 lapTime = 0
 prevLap = 0
 lapFormatted = "00:00.000"
@@ -56,20 +60,25 @@ def data_collect():
     timeStart = time.time()
     timeElapsed = timeStart
     timeStamp = "00:00.000"
-    adcRawData = []
+    #adcRawData = []
     while 1:
         timeElapsed = time.time() -  timeStart
         timeStamp = format_time(timeElapsed)
         #retrieve data
-        accelData = accelHandler.getData()
-        adcRawData = adcHandler.getData()
+        try:
+            accelData = accelHandler.getData()
+        except:
+            accelData = ["ERROR", "ERROR", "ERROR"]
+
+        adcData = adcHandler.getData()
         shiftReg1Data = shiftRegHandler.getData(1, shiftReg1Len)
         shiftReg2Data = shiftRegHandler.getData(2, shiftReg2Len)
 
         #format data
-        for i in range(3):
-            for j in range(8):
-                adcData.append(str(int(adcRawData[i*8 + j]*100)/100))
+        #adcData = []
+        #for i in range(3):
+            #for j in range(8):
+         #       adcData.append(str(int(adcRawData[i*8 + j]*100)/100))
 
 #logs data
 def data_log():
@@ -88,29 +97,35 @@ def data_log():
             
             #write to file
             writer.writerow(data)
-
+        
+            time.sleep(0.1)
 
 #generate dummy data for the screen
 def update_data():
     global mph, soc, latG, batStr, tcOn
+    flip = 1;
     while 1:
         for i in range(0,100):
-            mph += 1
-            soc += 1
-            latG += 0.01
-            tcOn = True
-            batStr = "HOT"
+            #mph += 1*flip
+
+            if socPot < len(adcData):
+                mph = adcData[socPot]
+                soc = ((adcData[socPot]-socMin)/(socMax-socMin))
+            else:
+                mph = 69
+                soc = 0;
+
+            latG += 0.01*flip
+            if 1 == flip:
+                tcOn = True
+                batStr = "HOT"
+            else:
+                tcOn = False
+                batStr = "OK"
 
             time.sleep(0.1)
+        flip *= -1
 
-        for i in range(0,100):
-            mph -= 1
-            soc -= 1
-            latG -= 0.01
-            tcOn = False
-            batStr = "OK"
-
-            time.sleep(0.1)
 
 #Formats time for use in displaying
 def format_time(time):
@@ -179,15 +194,15 @@ def update_screen(connection):
 def run_screen():
     print("Screen")
     screen_conn, dh_conn = Pipe(False) #Open a pipe for the screen
-
+    '''
     #Create the screen daemon and pass it the pipe
-#    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
-#    screenDaemon.start() #start the screen daemon
+    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
+    screenDaemon.start() #start the screen daemon
 
     #Create the updater daemon thread and pass it the our end of the pipe
-#    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
-#    updaterDaemon.start() #start the updater daemon
-     
+    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
+    updaterDaemon.start() #start the updater daemon
+    ''' 
     #Create a seperate daemon thread to manage collecting data from sensors and input
     dataDaemon = Thread(target=data_collect, daemon=True)
     dataDaemon.start() #start the data daemon
