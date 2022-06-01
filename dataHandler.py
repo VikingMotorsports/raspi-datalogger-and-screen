@@ -1,7 +1,7 @@
 import time
 from threading import Thread
 from multiprocessing import Process, Pipe
-#from screen import start_with_pipe
+from screen import start_with_pipe
 from random import randint
 import adcHandler
 import shiftRegHandler
@@ -102,18 +102,18 @@ def data_log():
 
 #generate dummy data for the screen
 def update_data():
-    global mph, soc, latG, batStr, tcOn
+    global mph, soc, latG, batStr, tcOn, adcData
     flip = 1;
     while 1:
         for i in range(0,100):
-            #mph += 1*flip
-
+            mph += 1*flip
+            '''
             if socPot < len(adcData):
-                mph = adcData[socPot]
-                soc = ((adcData[socPot]-socMin)/(socMax-socMin))
+                soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
             else:
-                mph = 69
                 soc = 0;
+            '''
+            soc +=1*flip
 
             latG += 0.01*flip
             if 1 == flip:
@@ -122,7 +122,7 @@ def update_data():
             else:
                 tcOn = False
                 batStr = "OK"
-
+            print(soc)
             time.sleep(0.1)
         flip *= -1
 
@@ -194,7 +194,7 @@ def update_screen(connection):
 def run_screen():
     print("Screen")
     screen_conn, dh_conn = Pipe(False) #Open a pipe for the screen
-    '''
+
     #Create the screen daemon and pass it the pipe
     screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
     screenDaemon.start() #start the screen daemon
@@ -202,7 +202,7 @@ def run_screen():
     #Create the updater daemon thread and pass it the our end of the pipe
     updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
     updaterDaemon.start() #start the updater daemon
-    ''' 
+    
     #Create a seperate daemon thread to manage collecting data from sensors and input
     dataDaemon = Thread(target=data_collect, daemon=True)
     dataDaemon.start() #start the data daemon
