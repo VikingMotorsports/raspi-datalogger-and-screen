@@ -6,8 +6,9 @@ i2c = board.I2C()
 accelor = LSM6DSOX(i2c)
 
 def getData():
-	x,y,z = accelor.acceleration
-	return x,y,z
+    x,y,z = accelor.acceleration
+    a,b,c = accelor.gyro
+    return x,y,z,a,b,c
 
 def printData():
     print("\nAccel:")

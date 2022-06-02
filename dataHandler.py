@@ -29,6 +29,8 @@ socPot = 0
 socMax = 61504
 socMin = 512
 
+latPos = 1
+
 batDig = 6
 
 lapTime = 0
@@ -38,7 +40,7 @@ lapFormatted = "00:00.000"
 split = 0
 splitFormatted = " 00:00.000"
 
-csvHeader = ["TIME ELAPSED", "XACCEL", "YACCEL", "ZACCEL", 
+csvHeader = ["TIME ELAPSED", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP", "TCON", "LAPTIME", "XACCEL", "YACCEL", "ZACCEL", "XGYRO", "YGYRO", "ZGYRO",
         "POT1", "POT2", "POT3", "POT4", "POT5", "POT6", "POT7", "POT8",
         "POT9", "POT10", "POT11", "POT12", "POT13", "POT14", "POT15", "POTl6",
         "POT17", "POT18", "POT19", "POT20", "POT21", "POT22", "POT23", "POT24",
@@ -66,7 +68,6 @@ def data_collect():
     timeStart = time.time()
     timeElapsed = timeStart
     timeStamp = "00:00.000"
-    #adcRawData = []
     shiftReg1Raw = []
     shiftReg2Raw = []
     while 1:
@@ -76,7 +77,7 @@ def data_collect():
         try:
             accelData = accelHandler.getData()
         except:
-            accelData = ["ERROR", "ERROR", "ERROR"]
+            accelData = ["ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR"]
 
         adcData = adcHandler.getData()
 
@@ -95,19 +96,17 @@ def data_collect():
             else:
                 shiftReg2Buf[i] = shiftReg2Raw[i]
 
-        print(str(shiftReg1Data) + "\t" + str(shiftReg2Data))
-
 
 #logs data
 def data_log():
-    global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp
+    global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted
     with open('/home/vms/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
         writer = csv.writer(f)
         writer.writerow(csvHeader)
         data = []
         while 1:
             #coalecse data 
-            data = [timeStamp]
+            data = [timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted]
             data.extend(accelData)
             data.extend(adcData)
             data.extend(shiftReg1Data)
@@ -120,19 +119,21 @@ def data_log():
 
 #generate dummy data for the screen
 def update_data():
-    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig
+    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData
     flip = 1;
     while 1:
         for i in range(0,100):
-            mph = str(shiftReg1Data)
+            mph += flip
+            if latPos < len(accelData):
+                latG = (accelData[latPos]/9.81)
+            else:
+                latG = -1;
             if socPot < len(adcData):
                 soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
                 if soc > 100:
                     soc = 100;
             else:
                 soc = 0;
-
-            latG += 0.01*flip
             
             if batDig < len(shiftReg1Data):
                 if shiftReg1Data[batDig] == 1:
@@ -190,10 +191,6 @@ def update_lap():
     random = randint(1, 100)
     lapTime = now-prevTime
     lapFormatted = format_time(lapTime)
-
-
-    if 1 == random:
-        lap()
 
 
 #Pass the screen updated info
