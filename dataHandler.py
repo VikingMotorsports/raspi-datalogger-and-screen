@@ -1,7 +1,8 @@
 import time
+import math
 from threading import Thread
 from multiprocessing import Process, Pipe
-from screen import start_with_pipe
+from screen import start_with_pipe, start_screen
 from random import randint
 import adcHandler
 import shiftRegHandler
@@ -18,6 +19,7 @@ soc = 0
 batStr = "OK"
 latG = 1.0
 tcOn = False
+clearLap = False
 
 newLap = False
 now = time.time()
@@ -26,6 +28,8 @@ prevTime = now
 socPot = 0
 socMax = 61504
 socMin = 512
+
+batDig = 6
 
 lapTime = 0
 prevLap = 0
@@ -43,8 +47,10 @@ csvHeader = ["TIME ELAPSED", "XACCEL", "YACCEL", "ZACCEL",
 
 shiftReg1Len = 8
 shiftReg2Len = 8
-shiftReg1Data = []
-shiftReg2Data = []
+shiftReg1Data = [[0] for x in range(shiftReg1Len)]
+shiftReg2Data = [[0] for x in range(shiftReg2Len)]
+shiftReg1Buf = [[0] for x in range(shiftReg1Len)]
+shiftReg2Buf = [[0] for x in range(shiftReg2Len)]
 accelData = []
 adcData = []
 timeStamp = "00:00.000"
@@ -56,11 +62,13 @@ def run():
 
 #reads sensors
 def data_collect():
-    global shiftReg1Data, shiftReg2Data, shiftReg1Len, shiftReg2Len, adcData, accelData, timeStamp
+    global shiftReg1Data, shiftReg2Data, shiftReg1Len, shiftReg2Len, shiftReg1Buf, shiftReg2Buf, adcData, accelData, timeStamp
     timeStart = time.time()
     timeElapsed = timeStart
     timeStamp = "00:00.000"
     #adcRawData = []
+    shiftReg1Raw = []
+    shiftReg2Raw = []
     while 1:
         timeElapsed = time.time() -  timeStart
         timeStamp = format_time(timeElapsed)
@@ -71,19 +79,29 @@ def data_collect():
             accelData = ["ERROR", "ERROR", "ERROR"]
 
         adcData = adcHandler.getData()
-        shiftReg1Data = shiftRegHandler.getData(1, shiftReg1Len)
-        shiftReg2Data = shiftRegHandler.getData(2, shiftReg2Len)
 
-        #format data
-        #adcData = []
-        #for i in range(3):
-            #for j in range(8):
-         #       adcData.append(str(int(adcRawData[i*8 + j]*100)/100))
+        #Using these extra buffers is a bandaid to filter out random noise caused by what i think is low current when the xserver is running
+        shiftReg1Raw = shiftRegHandler.getData(1, shiftReg1Len)
+        for i in range(shiftReg1Len):
+            if shiftReg1Raw[i] == shiftReg1Buf[i]:
+                shiftReg1Data[i] = shiftReg1Buf[i]
+            else:
+                shiftReg1Buf[i] = shiftReg1Raw[i]
+
+        shiftReg2Raw = shiftRegHandler.getData(2, shiftReg2Len)
+        for i in range(shiftReg2Len):
+            if shiftReg2Raw[i] == shiftReg2Buf[i]:
+                shiftReg2Data[i] = shiftReg2Buf[i]
+            else:
+                shiftReg2Buf[i] = shiftReg2Raw[i]
+
+        print(str(shiftReg1Data) + "\t" + str(shiftReg2Data))
+
 
 #logs data
 def data_log():
     global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp
-    with open('datalog.csv', 'a', encoding='UTF8') as f:
+    with open('/home/vms/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
         writer = csv.writer(f)
         writer.writerow(csvHeader)
         data = []
@@ -102,27 +120,31 @@ def data_log():
 
 #generate dummy data for the screen
 def update_data():
-    global mph, soc, latG, batStr, tcOn, adcData
+    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig
     flip = 1;
     while 1:
         for i in range(0,100):
-            mph += 1*flip
-            '''
+            mph = str(shiftReg1Data)
             if socPot < len(adcData):
                 soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
+                if soc > 100:
+                    soc = 100;
             else:
                 soc = 0;
-            '''
-            soc +=1*flip
 
             latG += 0.01*flip
+            
+            if batDig < len(shiftReg1Data):
+                if shiftReg1Data[batDig] == 1:
+                    batStr = "HOT"
+                else:
+                    batStr = "OK"
+                
             if 1 == flip:
                 tcOn = True
-                batStr = "HOT"
             else:
                 tcOn = False
-                batStr = "OK"
-            print(soc)
+
             time.sleep(0.1)
         flip *= -1
 
@@ -176,12 +198,12 @@ def update_lap():
 
 #Pass the screen updated info
 def update_screen(connection):
-    global now, prevTime, mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG
+    global now, prevTime, mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap
     now = time.time()
     prevTime = now
 
     while 1:
-            connection.send([mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG])
+            connection.send([mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap])
             if True == newLap:
                 newLap = False;
                 lapFormatted = "00:00.000"

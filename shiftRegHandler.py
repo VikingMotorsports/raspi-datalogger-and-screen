@@ -10,6 +10,10 @@ dataPin2 = 25 #connect to pin 9 on chip
 latchPin2 = 8 #connect to pin 1 on chip
 clockPin2 = 7 #connect to pin 2 on chip
 
+
+prevData1 = [0,0,0,0,0,0,0,0]
+prevData2 = [0,0,0,0,0,0,0,0]
+
 def setup():#initialize pins
     
     GPIO.setmode(GPIO.BCM) #Use physical numbering
@@ -33,14 +37,27 @@ def read(dataPin, latchPin, clockPin, amount): #read data from chip and print ou
     return data;
 
 def printData():
-    print("\nShift regs")
-    print(read(dataPin1, latchPin1, clockPin1, 8))  #get data
-    print(end = '\t')
-    print(read(dataPin2, latchPin2, clockPin2, 8))
+    global prevData1, prevData2, dataPin1, latchPin1, clockPin1, dataPin2, latchPin2, clockPin2
+    data1 = read(dataPin1, latchPin1, clockPin1, 8)  #get data
+    data2 = read(dataPin2, latchPin2, clockPin2, 8)
+    for i in range(8):
+        if data1[i] != prevData1[i]:
+            prevData1 = data1
+            print(prevData1[i], end=" |")
+        else:
+            print(" ", end= " |")
+    print("\t", end=" |")
+    for i in range(8):
+        if data2[i] != prevData2[i]:
+            prevData2 = data2
+            print(prevData2[i], end=" |")
+        else:
+            print(" ", end= " |")
     print()
 
 #returns the data from the shift regs
 def getData(reg, amount):
+    global dataPin1, latchPin1, clockPin1, dataPin2, latchPin2, clockPin2
     if 1 == reg:
         return read(dataPin1, latchPin1, clockPin1, amount)
     elif 2 == reg:
@@ -51,7 +68,7 @@ def getData(reg, amount):
 def loop():
     while True:
         printData()
-        time.sleep(0.1)
+        time.sleep(0.01)
 
 def cleanup():
     GPIO.cleanup()

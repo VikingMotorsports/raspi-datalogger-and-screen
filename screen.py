@@ -157,7 +157,7 @@ def color_rat(value):
 def update_thread(connection): 
     while 1:
         #get data from the pipe
-        mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG = connection.recv() 
+        mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap = connection.recv() 
 
         #update labels
         GLib.idle_add(mphDisplay.set_text, str(mph))
