@@ -2,13 +2,20 @@ import board
 import time
 from adafruit_lsm6ds.lsm6dsox import LSM6DSOX
 
-i2c = board.I2C()
-accelor = LSM6DSOX(i2c)
+connected = 0;
+try:
+    i2c = board.I2C()
+    accelor = LSM6DSOX(i2c)
+    connected = 1;
+except:
+    connected = 0;
 
 def getData():
-    x,y,z = accelor.acceleration
-    a,b,c = accelor.gyro
-    return x,y,z,a,b,c
+    if 1 == connected:
+        x,y,z = accelor.acceleration
+        a,b,c = accelor.gyro
+        return x,y,z,a,b,c
+    return 1,2,3,4,5,6
 
 def printData():
     print("\nAccel:")

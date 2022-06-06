@@ -126,6 +126,17 @@ def color_battery():
     else:
         bfStyleContext.remove_class("back-green")	
         bfStyleContext.add_class("back-red")	
+        
+def clear_laps():
+    global lapsTaken
+    lapsTaken = 0
+    lp1Context.add_class("white")
+    lp2Context.add_class("white")
+    lp3Context.add_class("white")
+    lp4Context.add_class("white")
+    lp5Context.add_class("white")
+    lp6Context.add_class("white")
+
 
 
 def color_tc(tcState):
@@ -182,6 +193,11 @@ def update_thread(connection):
             GLib.idle_add(splitDisplay.set_text, splitFormatted)
             GLib.idle_add(color_laps)
             GLib.idle_add(color_split, splitFormatted)
+
+        if True == clearLap:
+            GLib.idle_add(splitDisplay.set_text, "  00:00.000") 
+            GLib.idle_add(color_split,"  00:00.000")
+            GLib.idle_add(clear_laps)
             
     
 def init():

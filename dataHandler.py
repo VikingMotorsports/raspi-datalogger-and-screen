@@ -7,6 +7,7 @@ from random import randint
 import adcHandler
 import shiftRegHandler
 import accelHandler
+import tcHandler
 import csv
 
 #<',=,~~
@@ -19,7 +20,11 @@ soc = 0
 batStr = "OK"
 latG = 1.0
 tcOn = False
+mark = False
 clearLap = False
+tcOnVal = 0
+pedalPosition = 0
+tcThrottle = 0
 
 newLap = False
 now = time.time()
@@ -33,6 +38,10 @@ latPos = 1
 
 batDig = 6
 
+lapDig = 3
+markDig = 4
+clearDig = 5
+
 lapTime = 0
 prevLap = 0
 lapFormatted = "00:00.000"
@@ -40,21 +49,25 @@ lapFormatted = "00:00.000"
 split = 0
 splitFormatted = " 00:00.000"
 
-csvHeader = ["TIME ELAPSED", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP", "TCON", "LAPTIME", "XACCEL", "YACCEL", "ZACCEL", "XGYRO", "YGYRO", "ZGYRO",
+csvHeader = ["TIME ELAPSED", "MARK", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP", "LAPTIME",
+        "TCON", "TCPED", "TCTHROT", "XACCEL", "YACCEL", "ZACCEL", "XGYRO", "YGYRO", "ZGYRO",
+        "GPSFIX", "LAT", "LONG", "SATELLITES", "ALT", "SPEED", "ANGLE",
         "POT1", "POT2", "POT3", "POT4", "POT5", "POT6", "POT7", "POT8",
         "POT9", "POT10", "POT11", "POT12", "POT13", "POT14", "POT15", "POTl6",
-        "POT17", "POT18", "POT19", "POT20", "POT21", "POT22", "POT23", "POT24",
         "DIG1", "DIG2", "DIG3", "DIG4", "DIG5", "DIG6", "DIG7", "DIG8",
-        "DIG9", "DIG10", "DIG11", "DIG12", "DIG13", "DIG14", "DIG15", "DIG16"]
+        "DIG9", "DIG10", "DIG11", "DIG12", "DIG13", "DIG14", "DIG15", "DIG16",
+        "DIG17", "DIG18", "DIG19", "DIG20", "DIG21", "DIG22", "DIG23", "DIG24"]
 
 shiftReg1Len = 8
 shiftReg2Len = 8
-shiftReg1Data = [[0] for x in range(shiftReg1Len)]
-shiftReg2Data = [[0] for x in range(shiftReg2Len)]
-shiftReg1Buf = [[0] for x in range(shiftReg1Len)]
-shiftReg2Buf = [[0] for x in range(shiftReg2Len)]
-accelData = []
-adcData = []
+shiftReg1Data = [0 for x in range(shiftReg1Len)]
+shiftReg2Data = [0 for x in range(shiftReg2Len)]
+shiftReg1Buf = [0 for x in range(shiftReg1Len)]
+shiftReg2Buf = [0 for x in range(shiftReg2Len)]
+accelData = [0 for x in range(6)]
+adcData = [0 for x in range(16)]
+gpsData = [0 for x in range(7)]
+tcData = [0 for x in range(4)]
 timeStamp = "00:00.000"
 
 
@@ -64,14 +77,14 @@ def run():
 
 #reads sensors
 def data_collect():
-    global shiftReg1Data, shiftReg2Data, shiftReg1Len, shiftReg2Len, shiftReg1Buf, shiftReg2Buf, adcData, accelData, timeStamp
+    global shiftReg1Data, shiftReg2Data, shiftReg1Len, shiftReg2Len, shiftReg1Buf, shiftReg2Buf, adcData, accelData, timeStamp, tcData
     timeStart = time.time()
     timeElapsed = timeStart
     timeStamp = "00:00.000"
     shiftReg1Raw = []
     shiftReg2Raw = []
     while 1:
-        timeElapsed = time.time() -  timeStart
+        timeElapsed = time.time() - timeStart
         timeStamp = format_time(timeElapsed)
         #retrieve data
         try:
@@ -96,17 +109,64 @@ def data_collect():
             else:
                 shiftReg2Buf[i] = shiftReg2Raw[i]
 
+        data1 = randint(0,3)
+        data2 = randint(0,3)
+        tcData = tcHandler.tradeData(data1, data2);
+
+def clear():
+    global now, prevTime, clearLap, lapTime, prevLap, split
+    prevTime = now
+    lapTime = 0
+    prevLap = 0
+    split = 0
+    clearLap = True
+
+
+
+#interpret input
+def inputs():
+    global shiftReg1Data, lapDig, clearDig, markDig, clearLap, mark
+    length = 0
+    lapDown = False
+    clearDown = False
+    while 1:
+        length = len(shiftReg1Data)
+        if lapDig < length:
+            if 1 == shiftReg1Data[lapDig]:
+                lapDown = True
+
+            if True == lapDown and 0 == shiftReg1Data[lapDig]:
+                lapDown = False
+                lap()
+
+        if clearDig < length:
+            if 1 == shiftReg1Data[clearDig]:
+                clearDown = True
+
+            if True == clearDown and 0 == shiftReg1Data[clearDig]:
+                clearDown = False
+                clear()
+
+        if markDig < length and 1 == shiftReg1Data[markDig]:
+            mark = True
+        else:
+            mark = False
+
+        time.sleep(0.1)
+
+
 
 #logs data
 def data_log():
-    global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted
+    global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted, mark, pedalPosition, tcThrottle
     with open('/home/vms/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
         writer = csv.writer(f)
         writer.writerow(csvHeader)
         data = []
         while 1:
             #coalecse data 
-            data = [timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted]
+            data = [timeStamp, mark, mph, soc, batStr, latG, newLap, lapFormatted, tcOn, pedalPosition, tcThrottle]
+            data.extend(gpsData)
             data.extend(accelData)
             data.extend(adcData)
             data.extend(shiftReg1Data)
@@ -119,35 +179,40 @@ def data_log():
 
 #generate dummy data for the screen
 def update_data():
-    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData
-    flip = 1;
+    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData
     while 1:
-        for i in range(0,100):
-            mph += flip
-            if latPos < len(accelData):
-                latG = (accelData[latPos]/9.81)
+        if latPos < len(accelData):
+            latG = (accelData[latPos]/9.81)
+        else:
+            latG = -1
+        if socPot < len(adcData):
+            soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
+            if soc > 100:
+                soc = 100
+        else:
+            soc = 0
+    
+        if batDig < len(shiftReg1Data):
+            if shiftReg1Data[batDig] == 1:
+                batStr = "HOT"
             else:
-                latG = -1;
-            if socPot < len(adcData):
-                soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
-                if soc > 100:
-                    soc = 100;
-            else:
-                soc = 0;
+                batStr = "OK"
             
-            if batDig < len(shiftReg1Data):
-                if shiftReg1Data[batDig] == 1:
-                    batStr = "HOT"
-                else:
-                    batStr = "OK"
-                
-            if 1 == flip:
-                tcOn = True
-            else:
+        if 4 == len(tcData):
+            if 0 == tcData[3]:
                 tcOn = False
+            else:
+                tcOn = True
+            mph = tcData[0]
+            pedalPosition = tcData[1]
+            tcThrottle = tcData[2]
+        else:
+            tcON = False
+            mph = 0;
+            pedalPosition = -1;
+            tcThrottle = -1;
 
-            time.sleep(0.1)
-        flip *= -1
+        time.sleep(0.1)
 
 
 #Formats time for use in displaying
@@ -188,7 +253,6 @@ def update_lap():
     global now, newLap, lapTime, prevTime, split, splitFormatted, prevLap, lapFormatted
     now = time.time()
 
-    random = randint(1, 100)
     lapTime = now-prevTime
     lapFormatted = format_time(lapTime)
 
@@ -202,8 +266,9 @@ def update_screen(connection):
     while 1:
             connection.send([mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap])
             if True == newLap:
-                newLap = False;
+                newLap = False
                 lapFormatted = "00:00.000"
+            clearLap = False
             update_lap()
             time.sleep(0.1)
 
@@ -230,5 +295,8 @@ def run_screen():
     logDaemon = Thread(target=data_log, daemon=True)
     logDaemon.start() #start the log daemon
 
+    #Create a sperate daemon thread to manage inputs
+    inputDaemon = Thread(target=inputs, daemon=True)
+    inputDaemon.start() #start the input daemon
 
 
