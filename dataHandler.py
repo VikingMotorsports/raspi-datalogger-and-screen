@@ -83,6 +83,8 @@ def data_collect():
     timeStamp = "00:00.000"
     shiftReg1Raw = []
     shiftReg2Raw = []
+    adcRaw = []
+    adcRawOld = [0 for x in range(16)]
     while 1:
         timeElapsed = time.time() - timeStart
         timeStamp = format_time(timeElapsed)
@@ -90,9 +92,12 @@ def data_collect():
         try:
             accelData = accelHandler.getData()
         except:
-            accelData = ["ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR"]
+            accelData = ["ERR", "ERR", "ERR", "ERR", "ERR", "ERR"]
 
-        adcData = adcHandler.getData()
+        adcRaw = adcHandler.getData()
+        for i in range(0, 16):
+            adcData[i] = (adcRaw[i] + adcRawOld[i])/2
+        adcRawOld = adcRaw
 
         #Using these extra buffers is a bandaid to filter out random noise caused by what i think is low current when the xserver is running
         shiftReg1Raw = shiftRegHandler.getData(1, shiftReg1Len)
@@ -166,8 +171,8 @@ def data_log():
         while 1:
             #coalecse data 
             data = [timeStamp, mark, mph, soc, batStr, latG, newLap, lapFormatted, tcOn, pedalPosition, tcThrottle]
-            data.extend(gpsData)
             data.extend(accelData)
+            data.extend(gpsData)
             data.extend(adcData)
             data.extend(shiftReg1Data)
             data.extend(shiftReg2Data)
@@ -181,10 +186,10 @@ def data_log():
 def update_data():
     global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData
     while 1:
-        if latPos < len(accelData):
+        if latPos < len(accelData) and "ERR" != accelData[0]:
             latG = (accelData[latPos]/9.81)
         else:
-            latG = -1
+            latG = "ERR"
         if socPot < len(adcData):
             soc = ((adcData[socPot]-socMin)/(socMax-socMin))*100
             if soc > 100:
@@ -264,7 +269,7 @@ def update_screen(connection):
     prevTime = now
 
     while 1:
-            connection.send([mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap])
+            connection.send([soc, batStr, lapFormatted, splitFormatted, newLap, clearLap])
             if True == newLap:
                 newLap = False
                 lapFormatted = "00:00.000"

@@ -20,7 +20,8 @@
           <object class="GtkLevelBar" id="levelBar1">
             <property name="height-request">80</property>
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+	    <property name="can-focus">False</property>
+            <property name="margin-top">5</property>
             <property name="margin-left">10</property>
             <property name="margin-right">10</property>
             <property name="margin-start">10</property>
@@ -57,7 +58,7 @@
           <object class="GtkBox" id="hbox1">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <child>
+	    <!--<child>
               <object class="GtkBox" id="lvbox1">
                 <property name="width-request">170</property>
                 <property name="visible">True</property>
@@ -69,7 +70,7 @@
                 <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <property name="homogeneous">True</property>
-                <child>
+		<child>
                   <object class="GtkFrame" id="latGFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -79,7 +80,7 @@
                       <object class="GtkLabel" id="latGDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">1</property>
+                        <property name="label" translatable="yes">0</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
                         </attributes>
@@ -105,7 +106,7 @@
                     <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
-                </child>
+	  	</child>
                 <child>
                   <object class="GtkFrame" id="batTempFrame">
                     <property name="visible">True</property>
@@ -143,7 +144,7 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
+		<child>
                   <object class="GtkFrame" id="tcFrame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -169,22 +170,59 @@
                     <property name="padding">5</property>
                     <property name="position">2</property>
                   </packing>
-                </child>
+		</child>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
-            </child>
+      		</child>-->
             <child>
               <object class="GtkBox" id="cvbox1">
                 <property name="width-request">260</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="margin-bottom">10</property>
+                <property name="margin-left">10</property>
                 <property name="orientation">vertical</property>
                 <child>
+                  <object class="GtkFrame" id="batTempFrame">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">none</property>
+                    <child>
+                      <object class="GtkLabel" id="batTempDisplay">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">OK</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 40"/>
+                        </attributes>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="batTempLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">BAT TEMP</property>
+                        <attributes>
+                          <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
+                        </attributes>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="text-container"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+		<!--<child>
                   <object class="GtkBox" id="cvbox2">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -210,7 +248,7 @@
                       <object class="GtkLabel" id="mphDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">88</property>
+                        <property name="label" translatable="yes">:(</property>
                         <attributes>
                           <attribute name="font-desc" value="Droid Sans Fallback Bold 100"/>
                         </attributes>
@@ -248,7 +286,7 @@
                     <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
-                </child>
+		</child>-->
                 <child>
                   <object class="GtkBox" id="cvbox3">
                     <property name="visible">True</property>
@@ -314,7 +352,6 @@
                 <property name="margin-right">10</property>
                 <property name="margin-start">10</property>
                 <property name="margin-end">10</property>
-                <property name="margin-bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame">

@@ -38,22 +38,22 @@ Gtk.LevelBar.add_offset_value(bat_level, "low-offset", 0.33)
 Gtk.LevelBar.add_offset_value(bat_level, "med-offset", 0.66)
 Gtk.LevelBar.add_offset_value(bat_level, "high-offset", 1.0)
 
-latGDisplay = builder.get_object("latGDisplay")
+#latGDisplay = builder.get_object("latGDisplay")
 batTempDisplay = builder.get_object("batTempDisplay")
-mphDisplay = builder.get_object("mphDisplay")
-tcDisplay = builder.get_object("tcDisplay")
+#mphDisplay = builder.get_object("mphDisplay")
+#tcDisplay = builder.get_object("tcDisplay")
 lapDisplay = builder.get_object("lapDisplay")
 splitDisplay = builder.get_object("splitDisplay")
 
-latGFrame = builder.get_object("latGFrame")
+#latGFrame = builder.get_object("latGFrame")
 batFrame = builder.get_object("batTempFrame")
-tcFrame = builder.get_object("tcFrame")
+#tcFrame = builder.get_object("tcFrame")
 
 rat = builder.get_object("rat")
 
-tcStyleContext = tcFrame.get_style_context()
+#tcStyleContext = tcFrame.get_style_context()
 bfStyleContext = batFrame.get_style_context()
-latGStyleContext = latGFrame.get_style_context()
+#latGStyleContext = latGFrame.get_style_context()
 ratContext = rat.get_style_context()
 
 #names are a holdover from past design, should be called laps
@@ -168,20 +168,23 @@ def color_rat(value):
 def update_thread(connection): 
     while 1:
         #get data from the pipe
-        mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap = connection.recv() 
+        soc, batStr, lapFormatted, splitFormatted, newLap, clearLap = connection.recv() 
 
         #update labels
-        GLib.idle_add(mphDisplay.set_text, str(mph))
+        #GLib.idle_add(mphDisplay.set_text, str(mph))
         GLib.idle_add(batTempDisplay.set_text, batStr)
         GLib.idle_add(lapDisplay.set_text, lapFormatted)
         GLib.idle_add(bat_level.set_value, soc/100)
-        GLib.idle_add(latGDisplay.set_text, "{:.2f}".format(latG))
+        #if "ERR" == latG:
+        #    GLib.idle_add(latGDisplay.set_text, "ERR")
+        #else:
+            #GLib.idle_add(latGDisplay.set_text, "{:.2f}".format(latG))
         
         #change colors accordingly 
         GLib.idle_add(color_battery)
-        GLib.idle_add(color_rat, mph)
-        GLib.idle_add(color_tc, tcOn)
-        GLib.idle_add(color_latG, latG)
+        #GLib.idle_add(color_rat, mph)
+        #GLib.idle_add(color_tc, tcOn)
+        #GLib.idle_add(color_latG, latG)
     
         if True == newLap:
             GLib.idle_add(lap6.set_text, lap5.get_text())

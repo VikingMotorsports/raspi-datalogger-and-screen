@@ -11,16 +11,34 @@ except:
     connected = 0;
 
 def getData():
-    if 1 == connected:
+    global connected, accelor
+    if connected == 0:
+        try:
+            i2c = board.I2C()
+            accelor = LSM6DSOX(i2c)
+            connected = 1
+        except:
+            connected = 0
+    elif connected == 1:
         x,y,z = accelor.acceleration
         a,b,c = accelor.gyro
         return x,y,z,a,b,c
-    return 1,2,3,4,5,6
+    return ["ERR", "ERR", "ERR", "ERR", "ERR", "ERR"]
 
 def printData():
-    print("\nAccel:")
-    print("Acceleration: X:%.2f, Y: %.2f, Z: %.2f m/s^2" % (accelor.acceleration))
-    print("Gyro: X:%.2f, Y: %.2f, Z: %.2f m/s^2" % (accelor.gyro))
+    global connected, accelor
+    if 1 == connected:
+        print("\nAccel:")
+        print("Acceleration: X:%.2f, Y: %.2f, Z: %.2f m/s^2" % (accelor.acceleration))
+        print("Gyro: X:%.2f, Y: %.2f, Z: %.2f m/s^2" % (accelor.gyro))
+    else:
+        try:
+            i2c = board.I2C()
+            accelor = LSM6DSOX(i2c)
+            connected = 1
+        except:
+            connected = 0
+        print("ERROR")
 
 if __name__ == "__main__":
     try:

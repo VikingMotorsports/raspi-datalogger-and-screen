@@ -1,5 +1,6 @@
 from smbus2 import SMBus, i2c_msg
 from random import randint
+import time
 
 slaveAddress = 0x69
 
@@ -12,7 +13,7 @@ def tradeData(data1, data2):
             bus.i2c_rdwr(send, rec)
             return list(rec)
     except:
-        return ["ERROR", "ERROR", "ERROR", "ERROR"]
+        return ["ERR", "ERR", "ERR", "ERR"]
 
 def loop():
         while 1:
