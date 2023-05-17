@@ -13,21 +13,23 @@ class Handler:
     def onDestroy(self, *args):
         Gtk.main_quit()
 
-
 #Get builder
 builder = Gtk.Builder()
-builder.add_from_file("/home/vms/raspi-datalogger-and-screen/screengui.glade")
+builder.add_from_file("/home/pi/raspi-datalogger-and-screen/screengui.glade")
 builder.connect_signals(Handler())
 
 #Get styling
 cssProvider = Gtk.CssProvider() 
-cssProvider.load_from_path("/home/vms/raspi-datalogger-and-screen/screen.css") 
+cssProvider.load_from_path("/home/pi/raspi-datalogger-and-screen/screen.css") 
 context = Gtk.StyleContext()
 screen = Gdk.Screen.get_default()
 context.add_provider_for_screen(screen,cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 #Get objects in window
 window = builder.get_object("window1")
+stack = builder.get_object("stack")
+info_page = builder.get_object("info_label")
+
 bat_level = builder.get_object("levelBar1")
 
 #Add color offsets to state of charge level bar
@@ -38,25 +40,26 @@ Gtk.LevelBar.add_offset_value(bat_level, "low-offset", 0.33)
 Gtk.LevelBar.add_offset_value(bat_level, "med-offset", 0.66)
 Gtk.LevelBar.add_offset_value(bat_level, "high-offset", 1.0)
 
-#latGDisplay = builder.get_object("latGDisplay")
+latGDisplay = builder.get_object("latGDisplay")
 batTempDisplay = builder.get_object("batTempDisplay")
-#mphDisplay = builder.get_object("mphDisplay")
-#tcDisplay = builder.get_object("tcDisplay")
+mphDisplay = builder.get_object("mphDisplay")
+tcDisplay = builder.get_object("tcDisplay")
 lapDisplay = builder.get_object("lapDisplay")
 splitDisplay = builder.get_object("splitDisplay")
 
-#latGFrame = builder.get_object("latGFrame")
+latGFrame = builder.get_object("latGFrame")
 batFrame = builder.get_object("batTempFrame")
-#tcFrame = builder.get_object("tcFrame")
+tcFrame = builder.get_object("tcFrame")
 
 rat = builder.get_object("rat")
 
-#tcStyleContext = tcFrame.get_style_context()
+tcStyleContext = tcFrame.get_style_context()
 bfStyleContext = batFrame.get_style_context()
-#latGStyleContext = latGFrame.get_style_context()
+latGStyleContext = latGFrame.get_style_context()
 ratContext = rat.get_style_context()
 
 #names are a holdover from past design, should be called laps
+
 lap1 = builder.get_object("split1")
 lap2 = builder.get_object("split2")
 lap3 = builder.get_object("split3")
@@ -146,18 +149,18 @@ def color_tc(tcState):
         tcStyleContext.remove_class("back-cyan")	
 
 def color_latG(latG):
-    if 1.5 <= latG:
-        latGStyleContext.remove_class("back-green")	
+    if 1.3 > latG:
         latGStyleContext.remove_class("back-yellow")	
-        latGStyleContext.add_class("back-red")	
-    elif 1.3 <= latG:
+        latGStyleContext.remove_class("back-red")	
+        latGStyleContext.add_class("back-green")	
+    elif 1.5 > latG:
         latGStyleContext.remove_class("back-green")	
         latGStyleContext.remove_class("back-red")	
         latGStyleContext.add_class("back-yellow")	
     else:
+        latGStyleContext.remove_class("back-green")	
         latGStyleContext.remove_class("back-yellow")	
-        latGStyleContext.remove_class("back-red")	
-        latGStyleContext.add_class("back-green")	
+        latGStyleContext.add_class("back-red")	
 
 
 def color_rat(value):
@@ -166,25 +169,26 @@ def color_rat(value):
 
 #provide updated values to the display by reading from a pipe
 def update_thread(connection): 
+    curr_page = 0
     while 1:
         #get data from the pipe
-        soc, batStr, lapFormatted, splitFormatted, newLap, clearLap = connection.recv() 
+        mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap, page, screendata = connection.recv() 
 
         #update labels
-        #GLib.idle_add(mphDisplay.set_text, str(mph))
+        GLib.idle_add(mphDisplay.set_text, str(mph))
         GLib.idle_add(batTempDisplay.set_text, batStr)
         GLib.idle_add(lapDisplay.set_text, lapFormatted)
         GLib.idle_add(bat_level.set_value, soc/100)
-        #if "ERR" == latG:
-        #    GLib.idle_add(latGDisplay.set_text, "ERR")
-        #else:
-            #GLib.idle_add(latGDisplay.set_text, "{:.2f}".format(latG))
+        if "ERR" == latG:
+            GLib.idle_add(latGDisplay.set_text, "ERR")
+        else:
+            GLib.idle_add(latGDisplay.set_text, "{:.2f}".format(latG))
         
         #change colors accordingly 
         GLib.idle_add(color_battery)
-        #GLib.idle_add(color_rat, mph)
-        #GLib.idle_add(color_tc, tcOn)
-        #GLib.idle_add(color_latG, latG)
+        GLib.idle_add(color_rat, mph)
+        GLib.idle_add(color_tc, tcOn)
+        GLib.idle_add(color_latG, latG)
     
         if True == newLap:
             GLib.idle_add(lap6.set_text, lap5.get_text())
@@ -198,9 +202,19 @@ def update_thread(connection):
             GLib.idle_add(color_split, splitFormatted)
 
         if True == clearLap:
-            GLib.idle_add(splitDisplay.set_text, "  00:00.000") 
-            GLib.idle_add(color_split,"  00:00.000")
+            GLib.idle_add(splitDisplay.set_text, "  00:00.0") 
+            GLib.idle_add(color_split,"  00:00.0")
             GLib.idle_add(clear_laps)
+
+
+        if page == 0:
+            GLib.idle_add(stack.set_visible_child_name, "page1")
+        else:
+            GLib.idle_add(stack.set_visible_child_name, "page2")
+                 
+        GLib.idle_add(info_page.set_text, screendata)
+
+        
             
     
 def init():

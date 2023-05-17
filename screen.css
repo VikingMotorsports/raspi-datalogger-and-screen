@@ -21,6 +21,18 @@ label
 	border: 5px solid DarkGrey;
 }
 
+.info_page_label
+{
+	color:lime;
+}
+
+.info_page
+{
+	color:white;
+}
+
+
+
 .red {color: red;}
 .yellow {color: yellow;}
 .lime {color: lime;}

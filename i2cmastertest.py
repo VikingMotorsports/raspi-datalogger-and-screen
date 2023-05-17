@@ -10,4 +10,5 @@ with SMBus(1) as bus:
         rec = i2c_msg.read(slaveAddress, 3)
         bus.i2c_rdwr(send, rec)
         data = list(rec)
-        print(str(data) + "\n")
+        print("Sent: " + str(toSend))
+        print(str(data))

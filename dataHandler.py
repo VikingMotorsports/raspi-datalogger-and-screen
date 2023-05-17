@@ -2,13 +2,12 @@ import time
 import math
 from threading import Thread
 from multiprocessing import Process, Pipe
-from screen import start_with_pipe, start_screen
+#from screen import start_with_pipe, start_screen
 from random import randint
 import adcHandler
 import shiftRegHandler
 import accelHandler
-import tcHandler
-import csv
+import i2cHandler
 
 #<',=,~~
 #   rat to eat bugs
@@ -44,10 +43,10 @@ clearDig = 5
 
 lapTime = 0
 prevLap = 0
-lapFormatted = "00:00.000"
+lapFormatted = "00:00.0"
 
 split = 0
-splitFormatted = " 00:00.000"
+splitFormatted = " 00:00.0"
 
 csvHeader = ["TIME ELAPSED", "MARK", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP", "LAPTIME",
         "TCON", "TCPED", "TCTHROT", "XACCEL", "YACCEL", "ZACCEL", "XGYRO", "YGYRO", "ZGYRO",
@@ -58,22 +57,26 @@ csvHeader = ["TIME ELAPSED", "MARK", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP",
         "DIG9", "DIG10", "DIG11", "DIG12", "DIG13", "DIG14", "DIG15", "DIG16",
         "DIG17", "DIG18", "DIG19", "DIG20", "DIG21", "DIG22", "DIG23", "DIG24"]
 
-shiftReg1Len = 8
-shiftReg2Len = 8
+shiftReg1Len = 16
 shiftReg1Data = [0 for x in range(shiftReg1Len)]
-shiftReg2Data = [0 for x in range(shiftReg2Len)]
 shiftReg1Buf = [0 for x in range(shiftReg1Len)]
-shiftReg2Buf = [0 for x in range(shiftReg2Len)]
 accelData = [0 for x in range(6)]
 adcData = [0 for x in range(16)]
 gpsData = [0 for x in range(7)]
 tcData = [0 for x in range(4)]
 timeStamp = "00:00.000"
 
+page = 0
+screenData = "Bababooey"
+
+i2cSend = bytes([0,0])
+i2cReceive = 0
+
 
 def run():
     run_screen()
-    update_data()
+    #update_data() TESTING
+    generate_dummy_data()
 
 #reads sensors
 def data_collect():
@@ -106,17 +109,6 @@ def data_collect():
                 shiftReg1Data[i] = shiftReg1Buf[i]
             else:
                 shiftReg1Buf[i] = shiftReg1Raw[i]
-
-        shiftReg2Raw = shiftRegHandler.getData(2, shiftReg2Len)
-        for i in range(shiftReg2Len):
-            if shiftReg2Raw[i] == shiftReg2Buf[i]:
-                shiftReg2Data[i] = shiftReg2Buf[i]
-            else:
-                shiftReg2Buf[i] = shiftReg2Raw[i]
-
-        data1 = randint(0,3)
-        data2 = randint(0,3)
-        tcData = tcHandler.tradeData(data1, data2);
 
 def clear():
     global now, prevTime, clearLap, lapTime, prevLap, split
@@ -159,12 +151,18 @@ def inputs():
 
         time.sleep(0.1)
 
+#does i2c communication
+def i2c_exchange():
+    global i2cSend, i2cReceive
+
+    while(1):
+        i2cReceive = i2cHandler.tradeData(*i2cSend);
 
 
 #logs data
 def data_log():
     global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted, mark, pedalPosition, tcThrottle
-    with open('/home/vms/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
+    with open('/home/pi/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
         writer = csv.writer(f)
         writer.writerow(csvHeader)
         data = []
@@ -182,7 +180,7 @@ def data_log():
         
             time.sleep(0.1)
 
-#generate dummy data for the screen
+#update the data sent to the screen
 def update_data():
     global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData
     while 1:
@@ -219,18 +217,66 @@ def update_data():
 
         time.sleep(0.1)
 
+def generate_dummy_data():
+    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData, page, screenData, i2cSend, i2cReceive
+
+    val = -10
+    direction = 1
+    while 1:
+        if val >= 100 or val < -10:
+            direction *= -1
+        
+        val += direction
+
+        if val > 0:
+            latG = (val/9.81)
+        else:
+            latG = "ERR"
+
+        if val >= 0:
+            soc = val
+            if soc > 100:
+                soc = 100
+        else:
+            soc = 0
+    
+        if val > 60:
+            batStr = "HOT"
+        else:
+            batStr = "OK"
+            
+        if val > 50:
+            tcOn = False
+        else:
+            tcOn = True
+
+        if val > 60:
+            page = 1
+        elif val < 10:
+            page = 0
+
+    
+        mph = val
+        pedalPosition = val
+        tcThrottle = val
+        
+        i2cSend = bytes([randint(1, 12), randint(1,12)])
+
+        screenData = str(i2cReceive)
+
+        time.sleep(0.1)
 
 #Formats time for use in displaying
 def format_time(time):
     #get base values
     minutes = str(int((time)/60))
     seconds = str(int(time)%60)
-    milliseconds = str(int(((time*1000))%1000))
+    milliseconds = str(int(((time*10))%10))
 
     #properly format values so they always take up the same amount of space
     minutes = "0"*(2 - len(minutes)) + minutes 
     seconds = "0"*(2 - len(seconds)) + seconds
-    milliseconds = "0"*(3 - len(milliseconds)) + milliseconds
+    milliseconds = "0"*(1 - len(milliseconds)) + milliseconds
 
     #hook it all up
     formatted = minutes + ":" + seconds + "." + milliseconds
@@ -249,7 +295,7 @@ def lap():
     elif 0 < split:
         splitFormatted = "+" + format_time(abs(split))
     else:
-        splitFormatted = "  00:00.000"
+        splitFormatted = "  00:00.0"
     newLap = True
 
   
@@ -260,19 +306,21 @@ def update_lap():
 
     lapTime = now-prevTime
     lapFormatted = format_time(lapTime)
+    if randint(0, 100) == 0:
+        lap()
 
 
 #Pass the screen updated info
 def update_screen(connection):
-    global now, prevTime, mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap
+    global now, prevTime, mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap, page, screenData
     now = time.time()
     prevTime = now
 
     while 1:
-            connection.send([soc, batStr, lapFormatted, splitFormatted, newLap, clearLap])
+            connection.send([mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap, page, screenData])
             if True == newLap:
                 newLap = False
-                lapFormatted = "00:00.000"
+                lapFormatted = "00:00.0"
             clearLap = False
             update_lap()
             time.sleep(0.1)
@@ -285,12 +333,12 @@ def run_screen():
     screen_conn, dh_conn = Pipe(False) #Open a pipe for the screen
 
     #Create the screen daemon and pass it the pipe
-    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
-    screenDaemon.start() #start the screen daemon
+#    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
+#    screenDaemon.start() #start the screen daemon
 
     #Create the updater daemon thread and pass it the our end of the pipe
-    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
-    updaterDaemon.start() #start the updater daemon
+#    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
+#    updaterDaemon.start() #start the updater daemon
     
     #Create a seperate daemon thread to manage collecting data from sensors and input
     dataDaemon = Thread(target=data_collect, daemon=True)
@@ -303,5 +351,9 @@ def run_screen():
     #Create a sperate daemon thread to manage inputs
     inputDaemon = Thread(target=inputs, daemon=True)
     inputDaemon.start() #start the input daemon
+
+    #Create a sperate daemon thread to manage i2c communication
+    i2cDaemon = Thread(target=i2c_exchange, daemon=True)
+    i2cDaemon.start() # start the i2c daemon
 
 
