@@ -2,12 +2,12 @@ import time
 import math
 from threading import Thread
 from multiprocessing import Process, Pipe
-#from screen import start_with_pipe, start_screen
+from screen import start_with_pipe, start_screen
 from random import randint
 import adcHandler
 import shiftRegHandler
 import accelHandler
-import i2cHandler
+from uartHandler import loop
 
 #<',=,~~
 #   rat to eat bugs
@@ -45,7 +45,7 @@ lapTime = 0
 prevLap = 0
 lapFormatted = "00:00.0"
 
-split = 0
+split= 0
 splitFormatted = " 00:00.0"
 
 csvHeader = ["TIME ELAPSED", "MARK", "MPH", "SOC", "BATSTATE", "LATG", "NEWLAP", "LAPTIME",
@@ -69,8 +69,8 @@ timeStamp = "00:00.000"
 page = 0
 screenData = "Bababooey"
 
-i2cSend = bytes([0,0])
-i2cReceive = 0
+uartSend = bytes([0,0,0])
+uartReceive = 0
 
 
 def run():
@@ -151,12 +151,14 @@ def inputs():
 
         time.sleep(0.1)
 
-#does i2c communication
-def i2c_exchange():
-    global i2cSend, i2cReceive
+#does uart communication
+def uart_exchange(connection):
+    global uartSend, uartReceive, screenData
 
     while(1):
-        i2cReceive = i2cHandler.tradeData(*i2cSend);
+        connection.send(uartSend)
+        uartReceive = connection.recv()
+        time.sleep(0.1)
 
 
 #logs data
@@ -218,7 +220,7 @@ def update_data():
         time.sleep(0.1)
 
 def generate_dummy_data():
-    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData, page, screenData, i2cSend, i2cReceive
+    global mph, soc, latG, batStr, tcOn, adcData, clearLap, shiftReg1Data, batDig, accelData, mph, pdealPosition, tcThrottle, tcData, page, screenData, uartSend, uartReceive
 
     val = -10
     direction = 1
@@ -260,9 +262,9 @@ def generate_dummy_data():
         pedalPosition = val
         tcThrottle = val
         
-        i2cSend = bytes([randint(1, 12), randint(1,12)])
+        uartSend = bytes([randint(1, 12), randint(1,12)])
 
-        screenData = str(i2cReceive)
+
 
         time.sleep(0.1)
 
@@ -331,14 +333,15 @@ def update_screen(connection):
 def run_screen():
     print("Screen")
     screen_conn, dh_conn = Pipe(False) #Open a pipe for the screen
+    uart_conn, recieve_conn = Pipe(False) #Open a pipe for uart
 
     #Create the screen daemon and pass it the pipe
-#    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
-#    screenDaemon.start() #start the screen daemon
+    screenDaemon = Process(target=start_with_pipe, args=(screen_conn,), daemon=True) 
+    screenDaemon.start() #start the screen daemon
 
     #Create the updater daemon thread and pass it the our end of the pipe
-#    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
-#    updaterDaemon.start() #start the updater daemon
+    updaterDaemon =  Thread(target=update_screen, args=(dh_conn,), daemon=True)
+    updaterDaemon.start() #start the updater daemon
     
     #Create a seperate daemon thread to manage collecting data from sensors and input
     dataDaemon = Thread(target=data_collect, daemon=True)
@@ -352,8 +355,8 @@ def run_screen():
     inputDaemon = Thread(target=inputs, daemon=True)
     inputDaemon.start() #start the input daemon
 
-    #Create a sperate daemon thread to manage i2c communication
-    i2cDaemon = Thread(target=i2c_exchange, daemon=True)
-    i2cDaemon.start() # start the i2c daemon
+    #Create a sperate daemon thread to manage uart communication
+    uartDaemon = Thread(target=loop, args=(uart_conn,),  daemon=True)
+    uartDaemon.start() # start the uart daemon
 
 

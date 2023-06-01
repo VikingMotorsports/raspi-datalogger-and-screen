@@ -173,7 +173,6 @@ def update_thread(connection):
     while 1:
         #get data from the pipe
         mph, soc, batStr, lapFormatted, splitFormatted, newLap, tcOn, latG, clearLap, page, screendata = connection.recv() 
-
         #update labels
         GLib.idle_add(mphDisplay.set_text, str(mph))
         GLib.idle_add(batTempDisplay.set_text, batStr)
