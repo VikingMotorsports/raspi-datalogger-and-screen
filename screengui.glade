@@ -542,7 +542,7 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">info</property>
                 <attributes>
-                  <attribute name="font-desc" value="Droid Sans Fallback Bold 10"/>
+                  <attribute name="font-desc" value="Droid Sans Fallback Bold 20"/>
                 </attributes>
                 <style>
                   <class name="info_page"/>

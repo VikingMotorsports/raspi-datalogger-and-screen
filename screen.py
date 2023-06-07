@@ -27,6 +27,7 @@ context.add_provider_for_screen(screen,cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_
 
 #Get objects in window
 window = builder.get_object("window1")
+
 stack = builder.get_object("stack")
 info_page = builder.get_object("info_label")
 
@@ -165,8 +166,7 @@ def color_latG(latG):
 
 def color_rat(value):
     update_text_color(ratContext, value)
-
-
+             
 #provide updated values to the display by reading from a pipe
 def update_thread(connection): 
     curr_page = 0
@@ -205,15 +205,12 @@ def update_thread(connection):
             GLib.idle_add(color_split,"  00:00.0")
             GLib.idle_add(clear_laps)
 
-
         if page == 0:
             GLib.idle_add(stack.set_visible_child_name, "page1")
         else:
             GLib.idle_add(stack.set_visible_child_name, "page2")
-                 
-        GLib.idle_add(info_page.set_text, screendata)
 
-        
+        GLib.idle_add(info_page.set_text, screendata) 
             
     
 def init():

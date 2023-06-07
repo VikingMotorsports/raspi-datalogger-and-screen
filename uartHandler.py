@@ -1,39 +1,48 @@
 import time
 import serial
+import numpy as np
 
 
-def tradeData(data, ser):
+terminator = bytes([255])
+def tradeData(ser):
     try:
-        recieved_data = ser.read() #read serial port
-        sleep(0.03)
-        data_left = ser.inWaiting() #check for remianing byte
-        received_data += ser.read(data_left)
+        received_data = ser.read_until(terminator) #read serial port
 
-        if received_data:
-            ser.write(data)
-        else: 
-            received_data = bytes(["ERR"])
+        if not received_data:
+            received_data = bytes([0])
 
         return received_data
     except:
-        return bytes(["ERR"])
+        return bytes([0])
 
 
 def loop(connection):
-    try:
-        ser = serial.Serial("/dev/ttyS0", 115200) #Open port with baud rate
-        ser.reset_input_buffer()
-        while 1:
-            toSend = connection.recv() 
-            
-            connection.send(tradeData(toSend, ser))
-            print(str(data) + "\n")
-    except:
-        return
+    while 1:
+        try:
+            ser = serial.Serial("/dev/ttyS0", 115200) #Open port with baud rate
+            ser.reset_input_buffer()
+            while 1:
+                data = np.frombuffer(tradeData(ser), dtype=np.ubyte)
+                connection.send(data)
+                #print(str(len(data)))
+        except:
+            print("ERROR WITH UART");
+
+def test():
+    while 1:
+        try:
+            ser = serial.Serial("/dev/ttyS0", 115200) #Open port with baud rate
+            ser.reset_input_buffer()
+            while 1:
+                data = tradeData(ser)                
+                print(str(data) + "\n")
+        except:
+            print("ERROR WITH UART");
+
 
 if __name__ == "__main__":
     try:
-        loop()
+        test()
     except KeyboardInterrupt:
         exit()
 
