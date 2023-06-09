@@ -19,12 +19,13 @@ def tradeData(ser):
 def loop(connection):
     while 1:
         try:
-            ser = serial.Serial("/dev/ttyS0", 115200) #Open port with baud rate
+            ser = serial.Serial("/dev/ttyS0", 115200, timeout=1) #Open port with baud rate
             ser.reset_input_buffer()
             while 1:
                 data = np.frombuffer(tradeData(ser), dtype=np.ubyte)
                 connection.send(data)
                 #print(str(len(data)))
+                sleep(0.1)
         except:
             print("ERROR WITH UART");
 

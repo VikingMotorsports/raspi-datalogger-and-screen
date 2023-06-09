@@ -203,7 +203,7 @@ def data_log():
                     data.extend(accelData)
                     data.extend(gpsData)
                     data.extend(adcData)
-                    #data.extend(uartReceive)
+                    data.extend(uartReceive[:-1])
 
                     #write to file
                     writer.writerow(data)
