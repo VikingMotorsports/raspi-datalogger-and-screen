@@ -193,7 +193,7 @@ def data_log():
     global shiftReg1Data, shiftReg2Data, adcData, accelData, timeStamp, mph, soc, batStr, latG, newLap, tcOn, lapFormatted, mark, pedalPosition, tcThrottle, uartReceive
     while(1):
         try:
-            with open('/home/pi/raspi-datalogger-and-screen/datalog.csv', 'w', encoding='UTF8') as f:
+            with open('/home/pi/raspi-datalogger-and-screen/datalog.csv', 'a', encoding='UTF8') as f:
                 writer = csv.writer(f)
                 writer.writerow(csvHeader)
                 data = []
